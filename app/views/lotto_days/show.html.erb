@@ -1,0 +1,41 @@
+<h2>LottoDay: </h2>
+<%= @ld.description %>
+<br/>
+<%= @ld %>
+<hr size=1 />
+<table border=0 cellpadding=1 cellspacing=1 bgcolor=black>
+<tr><th bgcolor=white>
+User
+</th><th bgcolor=white>
+Price
+</th><th bgcolor=white>
+Description
+</th><th bgcolor=white>
+Day
+</th></tr>
+<% @lotto_bets.each do |lb| %>
+<tr><td bgcolor=white>
+	<%= lb.user %>
+</td><td bgcolor=white>
+	<%= lb.price %>
+</td><td bgcolor=white>
+	<%= lb.description %>
+</td><td bgcolor=white>
+	<%= lb.lotto_day %>
+</td></tr>
+<% end %>
+</table>
+<hr size=1 />
+Lotto day result: 
+<% if @day_result %>
+	<% if @day_result.user %>
+		winner <b><%= @day_result.user.login %></b> with price <b><%= @day_result.price %></b>
+	<% else %>
+		no winner.
+	<% end %>
+<% else %>
+	no day result yet...
+<% end %>
+
+<hr size=1 />
+<%= link_to 'LottoDay list', { :action => :index } %>

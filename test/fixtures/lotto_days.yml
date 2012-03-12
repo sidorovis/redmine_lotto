@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  description: MyString
+  day: 2012-03-12 06:31:32
+two:
+  id: 2
+  description: MyString
+  day: 2012-03-12 06:31:32
