@@ -4,6 +4,8 @@
 	<%= f.label :Price %>:<br/>
 	<%= f.text_field :price, :default => "0.0", :label => :price %>
 	<%= f.hidden_field :lotto_day_id, :default => @ldr.lotto_day_id %>
+	<%= hidden_field_tag (:project_id, @project.identifier ) %>
+	<%= f.hidden_field( :project_id, :value => @project.id ) %>
 	<br/>
 	<%= f.submit 'Save' %>
 <% end %>

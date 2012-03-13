@@ -6,6 +6,8 @@
 	<br/>
 	<%= f.label :day %>: 
 	<%= f.date_select( :day , :order => [:year, :month, :day], :label => :day ) %>
+	<%= hidden_field_tag (:project_id, @project.identifier ) %>
+	<%= f.hidden_field( :project_id, :value => @project.id ) %>
 	<br/>
 	<%= f.submit 'Save' %>
 <% end %>

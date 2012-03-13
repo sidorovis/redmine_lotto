@@ -2,7 +2,7 @@
 
 <% @lotto_days.each do |ld| %>
 	<% if @show_allowed %>
-		<%= link_to ld.description.split("\n").join("<br/>"), { :action => 'show', :id => ld.id } %>
+		<%= link_to ld.description.split("\n").join("<br/>"), { :action => 'show', :id => ld.id, :project_id => @project.identifier } %>
 	<% else %>
 		<%= ld.description.split("\n").join("<br/>") %>
 	<% end %>
@@ -15,6 +15,6 @@
 <hr size=1/>
 <% end %>
 <% if @new_allowed %>
-	<%= link_to 'New LottoDay', { :action => 'new' } %>
+	<%= link_to 'New LottoDay', { :action => 'new', :project_id => @project.identifier } %>
 <% end %>
 

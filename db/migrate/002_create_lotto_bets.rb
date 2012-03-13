@@ -5,6 +5,7 @@ class CreateLottoBets < ActiveRecord::Migration
       t.column :user_id, :integer
       t.column :price, :double
       t.column :description, :string
+	  t.column :project_id, :integer
     end
   end
 

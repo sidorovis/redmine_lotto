@@ -3,4 +3,4 @@
 <%= render :partial => 'form' %>
 
 <hr size=1 />
-<%= link_to 'Lotto day list', {:action => :index } %>
+<%= link_to 'Lotto day list', {:action => :index, :project_id => @project.identifier } %>

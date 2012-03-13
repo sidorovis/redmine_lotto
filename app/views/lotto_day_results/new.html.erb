@@ -5,4 +5,4 @@
 <hr size=1 />
 <%= render :partial => 'form' %>
 <hr size=1 />
-<%= link_to 'Return to lotto_day', { :controller => :lotto_days, :action => :show, :id => @ldr.lotto_day.id } %>
+<%= link_to 'Return to lotto_day', { :controller => :lotto_days, :action => :show, :id => @ldr.lotto_day.id, :project_id => @project.identifier } %>

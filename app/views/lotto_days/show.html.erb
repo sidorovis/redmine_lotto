@@ -32,18 +32,21 @@ Day
 Lotto day result: 
 <% if @day_result %>
 	<%= @day_result.price %>
-<% else %>
-	no day result yet...
-<br/>
-	<% if @edit_allowed %>
-		<%= link_to 'Edit', { :action => 'edit',  :id => @ld.id } %>
-		<%= link_to 'Delete', { :action => 'destroy',  :id => @ld.id }, :confirm => "Are you sure?" %>
+	<% if @administrate_day_result_allowed %>
+		<%= link_to 'change price', { :controller => 'lotto_day_results', :action => 'edit', :id => @day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier } %>, 
+		<%= link_to 'delete price', { :controller => 'lotto_day_results', :action => 'destroy', :id => @day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
 	<% end %>
+<% else %>
+	no day result yet... 
 	<% if @add_day_result_allowed %>
+		<%= link_to 'add day result', { :controller => 'lotto_day_results', :action => 'new', :lotto_day_id => @ld.id, :project_id => @project.identifier } %>
+	<% end %>
+	<% if @edit_allowed %>
 		<br/>
-		<%= link_to 'Add day result', { :controller => 'lotto_day_results', :action => 'new', :lotto_day_id => @ld.id } %>
+		<%= link_to 'Edit', { :action => 'edit',  :id => @ld.id, :project_id => @project.identifier } %>
+		<%= link_to 'Delete', { :action => 'destroy',  :id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
 	<% end %>
 <% end %>
 
 <hr size=1 />
-<%= link_to 'LottoDay list', { :action => :index } %>
+<%= link_to 'LottoDay list', { :action => :index, :project_id => @project.identifier } %>
