@@ -1,8 +1,10 @@
 <h2>LottoDay: </h2>
-<%= @ld.description %>
+<%= @ld.description.split("\n").join("<br/>") %>
 <br/>
-<%= @ld %>
+<%= @ld.day_str %>
 <hr size=1 />
+
+<% if !@lotto_bets.size %>
 <table border=0 cellpadding=1 cellspacing=1 bgcolor=black>
 <tr><th bgcolor=white>
 User
@@ -26,15 +28,21 @@ Day
 <% end %>
 </table>
 <hr size=1 />
+<% end %>
 Lotto day result: 
 <% if @day_result %>
-	<% if @day_result.user %>
-		winner <b><%= @day_result.user.login %></b> with price <b><%= @day_result.price %></b>
-	<% else %>
-		no winner.
-	<% end %>
+	<%= @day_result.price %>
 <% else %>
 	no day result yet...
+<br/>
+	<% if @edit_allowed %>
+		<%= link_to 'Edit', { :action => 'edit',  :id => @ld.id } %>
+		<%= link_to 'Delete', { :action => 'destroy',  :id => @ld.id }, :confirm => "Are you sure?" %>
+	<% end %>
+	<% if @add_day_result_allowed %>
+		<br/>
+		<%= link_to 'Add day result', { :controller => 'lotto_day_results', :action => 'new', :lotto_day_id => @ld.id } %>
+	<% end %>
 <% end %>
 
 <hr size=1 />

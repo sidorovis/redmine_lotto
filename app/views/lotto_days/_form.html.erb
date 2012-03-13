@@ -1,0 +1,11 @@
+<%= error_messages_for :ld %>
+
+<% form_for @ld do |f| %>
+	<%= f.label :description %><br/>
+	<%= f.text_area :description, :rows => 5, :label => :description %>
+	<br/>
+	<%= f.label :day %>: 
+	<%= f.date_select( :day , :order => [:year, :month, :day], :label => :day ) %>
+	<br/>
+	<%= f.submit 'Save' %>
+<% end %>

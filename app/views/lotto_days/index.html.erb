@@ -1,12 +1,17 @@
 <h2>LottoDays</h2>
+
 <% @lotto_days.each do |ld| %>
 	<% if @show_allowed %>
-		<%= link_to ld.description, { :action => 'show', :id => ld.id } %>
+		<%= link_to ld.description.split("\n").join("<br/>"), { :action => 'show', :id => ld.id } %>
 	<% else %>
-		<%= ld.description %>
+		<%= ld.description.split("\n").join("<br/>") %>
 	<% end %>
 <br/>
-	<%= ld %>
+	<%= ld.day_str %>
+	<% if ld.lotto_day_result %>
+		finished
+	<% end %>
+<br/>
 <hr size=1/>
 <% end %>
 <% if @new_allowed %>

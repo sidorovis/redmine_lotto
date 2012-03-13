@@ -1,0 +1,9 @@
+<%= error_messages_for :ldr %>
+
+<% form_for @ldr do |f| %>
+	<%= f.label :Price %>:<br/>
+	<%= f.text_field :price, :default => "0.0", :label => :price %>
+	<%= f.hidden_field :lotto_day_id, :default => @ldr.lotto_day_id %>
+	<br/>
+	<%= f.submit 'Save' %>
+<% end %>
