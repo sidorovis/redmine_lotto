@@ -1,9 +1,9 @@
-<h2>Add lotto result to day</h2>
-<%= @ldr.lotto_day.description %>
+<h2>Editing Lotto Bet on:</h2>
+<%= @lotto_day.description.split("\n").join("<br/>") %>
 <br/>
-<%= @ldr.lotto_day.day_str %>
+<%= @lotto_day.day_str %>
 <br/>
-<%= @ldr.lotto_day.day_result_description %>
+<%= @lotto_day.day_result_description %>
 <hr size=1 />
 <%= render :partial => 'form' %>
 <hr size=1 />

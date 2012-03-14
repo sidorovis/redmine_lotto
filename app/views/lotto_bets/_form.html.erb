@@ -1,10 +1,14 @@
-<%= error_messages_for :ldr %>
+<%= error_messages_for :lb %>
 
-<% form_for @ldr do |f| %>
+<% form_for @lb do |f| %>
 	<%= f.label :Price %>:<br/>
 	<%= f.text_field :price, :label => :price %>
+	<br/>
+	<%= f.label :Description %>:<br/>
+	<%= f.text_area :description, :rows => 5, :label => :description %>
 	<%= f.hidden_field :lotto_day_id, :default => @lotto_day.id %>
 	<%= f.hidden_field( :project_id, :value => @project.id ) %>
+	<%= f.hidden_field( :user_id, :value => User.current.id ) %>
 	<%= hidden_field_tag (:project_id, @project.identifier ) %>
 	<%= hidden_field_tag (:lotto_day_id, @lotto_day.id ) %>
 	<br/>

@@ -1,4 +1,6 @@
 <h2>LottoDays</h2>
+<table width=100% border=0 bgcolor=black cellpadding=1 cellspacing=1>
+<tr><td width=50% valign=top bgcolor=white>
 
 <% @lotto_days.each do |ld| %>
 	<% if @show_allowed %>
@@ -16,3 +18,21 @@
 	<%= link_to 'New LottoDay', { :action => 'new', :project_id => @project.identifier } %>
 <% end %>
 
+</td>
+<td valign=top bgcolor=white>
+<table width=100% bgcolor=black cellpadding=1 cellspacing=1>
+<% @lotto_logs.each do |ll| %>
+<tr><td bgcolor=white>
+	<%= ll.user.firstname %> <%= ll.user.lastname %>
+</td><td bgcolor=white>
+	<%= ll.project.name %>
+</td><td bgcolor=white>
+	<%= ll.title %>
+</td><td bgcolor=white>
+	<%= ll.description %>
+</td></tr>
+<% end %>
+</table>
+</td>
+</tr>
+</table>

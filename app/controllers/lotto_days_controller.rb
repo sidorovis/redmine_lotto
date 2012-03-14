@@ -4,13 +4,15 @@ class LottoDaysController < ApplicationController
 	before_filter :find_project, :authorize
 
 	def index
-		@lotto_days = LottoDay.find(:all, :order => :day)
-		@show_allowed = check_authorize( 'show' )
+		@lotto_days = LottoDay.find( :all, :conditions => { :project_id => @project.id }, :order => :day )
+		@lotto_logs = LottoLog.find( :all, :conditions => { :project_id => @project.id }, :order => "id DESC" )
+
 		@new_allowed = check_authorize( 'new' )
+		@show_allowed = check_authorize( 'show' )
 	end
 	def show
-		@ld = LottoDay.find( params[ :id ] )
-		@lotto_bets = @ld.lotto_bets.find(:all)
+		@ld = LottoDay.find( params[ :id ], :conditions => { :project_id => @project.id }  )
+		@lotto_bets = @ld.lotto_bets.find( :all, :conditions => { :project_id => @project.id }  )
 
 		@edit_allowed = check_authorize( 'edit' )
 
@@ -25,12 +27,11 @@ class LottoDaysController < ApplicationController
 		@my_lotto_bet = LottoBet.find( :first, :conditions => { :user_id => User.current.id, :lotto_day_id => @ld.id, :project_id => @project.id } )
 	end
 	def new
-		@ld = LottoDay.new()
+		@ld = LottoDay.new( :project_id => @project.id )
 	end
 	def create
 		@ld = LottoDay.new( params[ :lotto_day ] )
-		if ( @ld.save )
-			
+		if ( LottoLog.log( @project.id, User.current.id, "Lotto day created", "Date: " + @ld.day_str + " finished set to: " + @ld.finished.to_s ) && @ld.save)
 			flash[:notice] = 'Lotto Day created'
 			respond_to do |format|
 				format.html { redirect_to :action => 'show',  :id => @ld.id, :project_id => @project.identifier }
@@ -60,7 +61,7 @@ class LottoDaysController < ApplicationController
 			end
 		else
 			@ld.finished = true
-			if @ld.save
+			if ( LottoLog.log( @project.id, User.current.id, "Lotto day set to finished", "Date: " + @ld.day_str ) && @ld.save )
 				flash[ :notice ] = "Day closed"
 			else
 				flash[ :error ] = "Day cannot be closed"
@@ -79,7 +80,8 @@ class LottoDaysController < ApplicationController
 				format.html { redirect_to :action => 'show', :id => @ld.id, :project_id => @project.identifier }
 			end
 		end
-		if (@ld.update_attributes( params[ :lotto_day ] ))
+		date = params[ :lotto_day ][ "day(3i)" ]+"/"+params[ :lotto_day ][ "day(2i)" ]+"/"+params[ :lotto_day ][ "day(1i)" ]
+		if ( LottoLog.log( @project.id, User.current.id, "Lotto day edited", "Old Date: " + @ld.day_str + " New Date:" + date.to_s + " finished set to: " + (params[ :lotto_day ][ :finished ] == "1").to_s ) && @ld.update_attributes( params[ :lotto_day ] ) )
 			flash[:notice] = 'Lotto Day updated'
 			respond_to do |format|
 				format.html { redirect_to :action => 'show',  :id => @ld.id, :project_id => @project.identifier }
@@ -100,8 +102,11 @@ class LottoDaysController < ApplicationController
 				format.html { redirect_to :action => 'show',  :id => @ld.id, :project_id => @project.identifier }
 			end
 		else
-			@ld.destroy
-			flash[:notice] = 'Lotto Day deleted'
+			if ( LottoLog.log( @project.id, User.current.id, "Lotto day destroyed", "Date: " + @ld.day_str + " finished set to: " + @ld.finished.to_s ) && @ld.destroy )
+				flash[:notice] = 'Lotto Day deleted'
+			else
+				flash[:notice] = 'Lotto Day cannot be deleted'
+			end
 			redirect_to :action => 'index', :project_id => @project.identifier
 		end
 	end
