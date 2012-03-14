@@ -11,8 +11,8 @@ class LottoDayResultsController < ApplicationController
 
 	def new
 		ld = LottoDay.find( params[ :lotto_day_id ] )
-		if (!ld)
-			flash[ :error ] = "Can't create lotto day result."
+		if (!ld || !ld.finished)
+			flash[ :error ] = "Can't create lotto day result, it should be finished."
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'index', :project_id => @project.identifier  }
 			end
@@ -23,13 +23,17 @@ class LottoDayResultsController < ApplicationController
 
 	def create
 		@ldr = LottoDayResult.new( params[ :lotto_day_result ] )
-		if (@ldr.save)
+		if ( @ldr.lotto_day.finished && @ldr.save)
+		    @news = News.new(:project => @project, :author => User.current)
+			@news.title = "Lotto day result registered"
+			@news.description = "Price: " + @ldr.price.to_s
+			@news.save
 			flash[:notice] = 'Lotto Day Result registered'
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'show', :id => @ldr.lotto_day_id, :project_id => @project.identifier  }
 			end
 		else
-			flash[:error] = 'Lotto Day Result cannot be registered.'
+			flash[:error] = 'Lotto Day Result cannot be registered. Possibly it should be finished first.'
 			respond_to do |format|
 				format.html { render :action => 'new', :lotto_day_id => @ldr.lotto_day_id, :project_id => @project.identifier }
 			end
@@ -49,6 +53,11 @@ class LottoDayResultsController < ApplicationController
 	def update
 		@ldr = LottoDayResult.find( params[ :id ] )
 		if (@ldr.update_attributes( params[ :lotto_day_result ] ))
+		    @news = News.new(:project => @project, :author => User.current)
+			@news.title = "Lotto day result changed"
+			@news.description = "Price: " + @ldr.price.to_s
+			@news.save
+
 			flash[:notice] = 'Lotto Day Result Updated'
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'show', :id => @ldr.lotto_day_id, :project_id => @project.identifier }
@@ -64,6 +73,11 @@ class LottoDayResultsController < ApplicationController
 		@ldr = LottoDayResult.find( params[ :id ] )
 		lotto_day_result_id = @ldr.lotto_day_id
 		@ldr.destroy
+	    @news = News.new(:project => @project, :author => User.current)
+		@news.title = "Lotto day result destroyed"
+		@news.description = "Destroyed"
+		@news.save
+
 		flash[:notice] = 'Lotto Day Result deleted'
 		respond_to do |format|
 			format.html { redirect_to :controller => 'lotto_days', :action => 'show', :id => lotto_day_result_id, :project_id => @project.identifier }

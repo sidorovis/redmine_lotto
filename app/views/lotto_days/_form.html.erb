@@ -1,11 +1,14 @@
 <%= error_messages_for :ld %>
 
 <% form_for @ld do |f| %>
-	<%= f.label :description %><br/>
+	<%= f.label :Description %><br/>
 	<%= f.text_area :description, :rows => 5, :label => :description %>
 	<br/>
-	<%= f.label :day %>: 
+	<%= f.label :Day %>: 
 	<%= f.date_select( :day , :order => [:year, :month, :day], :label => :day ) %>
+	<br/>
+	<%= f.label :Finished %>: 
+	<%= f.check_box :finished, :default => false %>
 	<%= hidden_field_tag (:project_id, @project.identifier ) %>
 	<%= f.hidden_field( :project_id, :value => @project.id ) %>
 	<br/>

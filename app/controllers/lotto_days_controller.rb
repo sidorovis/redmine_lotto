@@ -11,10 +11,18 @@ class LottoDaysController < ApplicationController
 	def show
 		@ld = LottoDay.find( params[ :id ] )
 		@lotto_bets = @ld.lotto_bets.find(:all)
-		@day_result = @ld.lotto_day_result
+
 		@edit_allowed = check_authorize( 'edit' )
+
 		@add_day_result_allowed = check_authorize( 'new', 'lotto_day_results' )
 		@administrate_day_result_allowed = check_authorize( 'edit', 'lotto_day_results' )
+
+		@administrate_own_bet = false
+		if ( check_authorize( 'new', 'lotto_bets' ) && !@ld.lotto_day_result && !@ld.finished )
+			@administrate_own_bet = true
+		end
+	
+		@my_lotto_bet = LottoBet.find( :first, :conditions => { :user_id => User.current.id, :lotto_day_id => @ld.id, :project_id => @project.id } )
 	end
 	def new
 		@ld = LottoDay.new()
@@ -22,6 +30,7 @@ class LottoDaysController < ApplicationController
 	def create
 		@ld = LottoDay.new( params[ :lotto_day ] )
 		if ( @ld.save )
+			
 			flash[:notice] = 'Lotto Day created'
 			respond_to do |format|
 				format.html { redirect_to :action => 'show',  :id => @ld.id, :project_id => @project.identifier }
@@ -35,8 +44,27 @@ class LottoDaysController < ApplicationController
 	end
 	def edit
 		@ld = LottoDay.find( params[ :id ] )
-		if @ld.lotto_day_result 
+		if @ld.lotto_day_result
 			flash[ :error ] = "Day could not be edited, it have day result"
+			respond_to do |format|
+				format.html { redirect_to :action => 'show', :id => @ld.id, :project_id => @project.identifier }
+			end
+		end
+	end
+	def finish_day
+		@ld = LottoDay.find( params[ :id ] )
+		if @ld.lotto_day_result
+			flash[ :error ] = "Day could not be edited, it have day result"
+			respond_to do |format|
+				format.html { redirect_to :action => 'show', :id => @ld.id, :project_id => @project.identifier }
+			end
+		else
+			@ld.finished = true
+			if @ld.save
+				flash[ :notice ] = "Day closed"
+			else
+				flash[ :error ] = "Day cannot be closed"
+			end
 			respond_to do |format|
 				format.html { redirect_to :action => 'show', :id => @ld.id, :project_id => @project.identifier }
 			end
@@ -45,6 +73,12 @@ class LottoDaysController < ApplicationController
 
 	def update
 		@ld = LottoDay.find( params[ :id ] )
+		if @ld.lotto_day_result
+			flash[ :error ] = "Day could not be edited, it finished or it have day result"
+			respond_to do |format|
+				format.html { redirect_to :action => 'show', :id => @ld.id, :project_id => @project.identifier }
+			end
+		end
 		if (@ld.update_attributes( params[ :lotto_day ] ))
 			flash[:notice] = 'Lotto Day updated'
 			respond_to do |format|
@@ -60,8 +94,8 @@ class LottoDaysController < ApplicationController
 
 	def destroy
 		@ld = LottoDay.find( params[ :id ] )
-		if @ld.lotto_day_result 
-			flash[ :error ] = "Day could not be deleted, it have day result"
+		if @ld.lotto_day_result || @ld.finished
+			flash[ :error ] = "Day could not be deleted, it finished or have day result"
 			respond_to do |format|
 				format.html { redirect_to :action => 'show',  :id => @ld.id, :project_id => @project.identifier }
 			end

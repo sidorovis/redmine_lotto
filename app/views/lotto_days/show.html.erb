@@ -2,6 +2,8 @@
 <%= @ld.description.split("\n").join("<br/>") %>
 <br/>
 <%= @ld.day_str %>
+<br/>
+<%= @ld.day_result_description %>
 <hr size=1 />
 
 <% if !@lotto_bets.size %>
@@ -29,22 +31,41 @@ Day
 </table>
 <hr size=1 />
 <% end %>
-Lotto day result: 
-<% if @day_result %>
-	<%= @day_result.price %>
-	<% if @administrate_day_result_allowed %>
-		<%= link_to 'change price', { :controller => 'lotto_day_results', :action => 'edit', :id => @day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier } %>, 
-		<%= link_to 'delete price', { :controller => 'lotto_day_results', :action => 'destroy', :id => @day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
+<% if !@ld.finished %>
+	<% if @add_day_result_allowed %>
+		<%= link_to 'Close possibility to create bets', { :controller => 'lotto_days', :action => 'finish_day', :id => @ld.id, :project_id => @project.identifier } %>
 	<% end %>
 <% else %>
-	no day result yet... 
-	<% if @add_day_result_allowed %>
-		<%= link_to 'add day result', { :controller => 'lotto_day_results', :action => 'new', :lotto_day_id => @ld.id, :project_id => @project.identifier } %>
+Lotto day result: 
+	<% if @ld.lotto_day_result %>
+		<%= @ld.lotto_day_result.price %>
+		<% if @administrate_day_result_allowed %>
+			<%= link_to 'change price', { :controller => 'lotto_day_results', :action => 'edit', :id => @ld.lotto_day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier } %>, 
+			<%= link_to 'delete price', { :controller => 'lotto_day_results', :action => 'destroy', :id => @ld.lotto_day_result.id, :lotto_day_id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
+		<% end %>
+	<% else %>
+		no day result yet... 
+		<% if @add_day_result_allowed %>
+			<%= link_to 'add day result', { :controller => 'lotto_day_results', :action => 'new', :lotto_day_id => @ld.id, :project_id => @project.identifier } %>
+		<% end %>
+	<% end %>	
+<% end %>
+<% if @edit_allowed && !@ld.lotto_day_result %>
+	<br/>
+	<%= link_to 'Edit', { :action => 'edit',  :id => @ld.id, :project_id => @project.identifier } %>
+	<%= link_to 'Delete', { :action => 'destroy',  :id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
+<% end %>
+<br/>
+<% if @my_lotto_bet %>
+	Your bet is: <%= @my_lotto_bet %>
+	<% if @administrate_own_bet %>
+		<%= link_to 'change bet' %>
+		<%= link_to 'delete bet' %>
 	<% end %>
-	<% if @edit_allowed %>
-		<br/>
-		<%= link_to 'Edit', { :action => 'edit',  :id => @ld.id, :project_id => @project.identifier } %>
-		<%= link_to 'Delete', { :action => 'destroy',  :id => @ld.id, :project_id => @project.identifier }, :confirm => "Are you sure?" %>
+<% else %>
+	No bet...
+	<% if @administrate_own_bet %>
+		<%= link_to 'create bet' %>
 	<% end %>
 <% end %>
 

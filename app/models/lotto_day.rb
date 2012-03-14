@@ -12,4 +12,15 @@ class LottoDay < ActiveRecord::Base
 		day.strftime("%d/%m/%Y")
 	end
 
+	def day_result_description
+		if finished
+			if lotto_day_result
+				"result: " + lotto_day_result.price.to_s
+			else
+				"no day result, no more bets."
+			end
+		else
+			"day is free to bet"
+		end		
+	end
 end

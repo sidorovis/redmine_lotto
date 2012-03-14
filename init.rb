@@ -18,12 +18,12 @@ Redmine::Plugin.register :redmine_lottos do
 #, :param => :project_id
 
 		permission :view_lotto_days, :lotto_days => [:index, :show]
-		permission :administrate_lotto_days, :lotto_days => [:new, :create, :edit, :update, :destroy]
+		permission :administrate_lotto_days, :lotto_days => [:new, :create, :edit, :finish_day, :update, :destroy]
 
 		permission :add_day_results, :lotto_day_results => [:new, :create]
 		permission :administrate_day_results, :lotto_day_results => [:new, :create, :edit, :update, :destroy]
 
-#		permission :administrate_own_bet, :lotto_bet => [:new, :create, :edit, :update]
+		permission :administrate_own_bet, :lotto_bets => [:new, :create, :edit, :update, :destroy]
 
 	end
 end

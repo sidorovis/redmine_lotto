@@ -4,6 +4,7 @@ class CreateLottoDays < ActiveRecord::Migration
       t.column :description, :string
       t.column :day, :datetime
 	  t.column :project_id, :integer
+	  t.column :finished, :boolean
     end
   end
 
