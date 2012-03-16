@@ -18,10 +18,15 @@ Description
 <% @lotto_bets.each do |lb| %>
 <tr><td bgcolor=white>
 	<%= lb.user %>
-</td><td bgcolor=white>
+</td>
+<% if lb.price >=0 %>
+	<td bgcolor=green style="color:white;">
+<% else %>
+	<td bgcolor=red style="color:white;">
+<% end %>
 	<%= lb.price %>
 </td><td bgcolor=white>
-	<%= lb.description %>
+	<%= h(lb.description) %>
 </td></tr>
 <% end %>
 </table>

@@ -11,6 +11,7 @@ class LottoBetsController < ApplicationController
 
 	def create
 		@lb = LottoBet.new( params[ :lotto_bet ] )
+#		lb = @lotto_day.bets.find( @lb.id )
 		if ( !@lotto_day.finished && LottoLog.log( @project.id, User.current.id, "Lotto bet created", "Bet: " + @lb.price.to_s + " on " + @lotto_day.day_str ) && @lb.save )
 			flash[:notice] = 'Lotto Bet registered'
 			respond_to do |format|
