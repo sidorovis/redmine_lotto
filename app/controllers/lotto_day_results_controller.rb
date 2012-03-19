@@ -15,10 +15,11 @@ class LottoDayResultsController < ApplicationController
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'index', :project_id => @project.identifier  }
 			end
+		else
+			@ldr = LottoDayResult.new
+			@ldr.lotto_day = @lotto_day
+			@ldr.project = @project
 		end
-		@ldr = LottoDayResult.new
-		@ldr.lotto_day = @lotto_day
-		@ldr.project = @project
 	end
 
 	def create
@@ -42,12 +43,19 @@ class LottoDayResultsController < ApplicationController
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'index', :project_id => @project.identifier }
 			end
+		else
+			@ldr = LottoDayResult.find( params[ :id ], :conditions => { :project_id => @project.id } )	
+			if (!@ldr)
+				flash[ :error ] = "Can't edit lotto day result."
+				respond_to do |format|
+					format.html { redirect_to :controller => 'lotto_days', :action => 'index', :project_id => @project.identifier }
+				end
+			end
 		end
-		@ldr = LottoDayResult.find( params[ :id ], :conditions => { :project_id => @project.id } )	
 	end
 	def update
 		@ldr = LottoDayResult.find( params[ :id ], :conditions => { :project_id => @project.id } )
-		if ( LottoLog.log( @project.id, User.current.id, "Lotto day result changed", "Price: " + params[ :lotto_day_result ][ :price ].to_s + ", " + @ldr.lotto_day.day_str ) && @ldr.update_attributes( params[ :lotto_day_result ] ))
+		if ( @ldr && LottoLog.log( @project.id, User.current.id, "Lotto day result changed", "Price: " + params[ :lotto_day_result ][ :price ].to_s + ", " + @ldr.lotto_day.day_str ) && @ldr.update_attributes( params[ :lotto_day_result ] ))
 			flash[:notice] = 'Lotto Day Result Updated'
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'show', :id => @ldr.lotto_day_id, :project_id => @project.identifier }
@@ -61,8 +69,7 @@ class LottoDayResultsController < ApplicationController
 	end
 	def destroy
 		@ldr = LottoDayResult.find( params[ :id ], :conditions => { :project_id => @project.id } )
-
-		if ( LottoLog.log( @project.id, User.current.id, "Lotto day result destroyed", "Destroyed on" + ", " + @ldr.lotto_day.day_str ) && @ldr.destroy )
+		if ( @ldr && LottoLog.log( @project.id, User.current.id, "Lotto day result destroyed", "Destroyed on" + ", " + @ldr.lotto_day.day_str ) && @ldr.destroy )
 			flash[:notice] = 'Lotto Day Result deleted'
 			respond_to do |format|
 				format.html { redirect_to :controller => 'lotto_days', :action => 'show', :id => @lotto_day.id, :project_id => @project.identifier }
