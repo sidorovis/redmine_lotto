@@ -5,7 +5,7 @@ class LottoDaysController < ApplicationController
 
 	def index
 		@lotto_days = LottoDay.find( :all, :conditions => { :project_id => @project.id }, :order => "day DESC" )
-		@lotto_logs = LottoLog.find( :all, :conditions => { :project_id => @project.id }, :order => "id DESC", :limit => 15 )
+		@lotto_logs = LottoLog.find( :all, :conditions => { :project_id => @project.id }, :order => "id DESC", :limit => 30 )
 
 		@new_allowed = check_authorize( 'new' )
 		@show_allowed = check_authorize( 'show' )
